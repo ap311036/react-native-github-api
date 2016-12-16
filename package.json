@@ -43,6 +43,7 @@
     "whatwg-fetch": "^2.0.1"
   },
   "main": "lib",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "mocha",
     "build": "browserify lib/index.js -o dist/index.js",
