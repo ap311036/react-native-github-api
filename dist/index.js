@@ -124,7 +124,6 @@ function toCamelCase(str) {
 (function (process){
 "use strict";
 
-
 var Url = require("url");
 var error = require("./error");
 var mime = require("mime-types");
@@ -196,7 +195,7 @@ var isNode = process.title === 'node';
  *          ...
  *      }
  **/
-var Client = module.exports = function(config) {
+var Client = module.exports = function (config) {
   if (!(this instanceof Client)) {
     return new Client(config);
   }
@@ -217,7 +216,7 @@ var Client = module.exports = function(config) {
   }
 
   // store mapping of accept header to preview api endpoints
-  var mediaHash  = this.routes.defines.acceptTree;
+  var mediaHash = this.routes.defines.acceptTree;
   var mediaTypes = {};
 
   for (var accept in mediaHash) {
@@ -231,7 +230,7 @@ var Client = module.exports = function(config) {
   this.setupRoutes();
 };
 
-(function() {
+(function () {
   /**
    *  Client#setupRoutes() -> null
    *
@@ -259,15 +258,15 @@ var Client = module.exports = function(config) {
    *  Note: Query escaping for usage with SQL products is something that can be
    *  implemented additionally by adding an additional parameter type.
    **/
-  this.setupRoutes = function() {
+  this.setupRoutes = function () {
     var self = this;
     var routes = this.routes;
     var defines = routes.defines;
     this.constants = defines.constants;
-    this.requestHeaders = defines["request-headers"].map(function(header) {
+    this.requestHeaders = defines["request-headers"].map(function (header) {
       return header.toLowerCase();
     });
-    this.responseHeaders = defines["response-headers"].map(function(header) {
+    this.responseHeaders = defines["response-headers"].map(function (header) {
       return header.toLowerCase();
     });
     delete routes.defines;
@@ -336,7 +335,7 @@ var Client = module.exports = function(config) {
             if (typeof value == "string") {
               try {
                 value = JSON.parse(value);
-              } catch(ex) {
+              } catch (ex) {
                 throw new error.BadRequest("JSON parse error of value for parameter '" +
                   paramName + "': " + value);
               }
@@ -353,7 +352,7 @@ var Client = module.exports = function(config) {
       if (!baseType) {
         baseType = "";
       }
-      Object.keys(struct).forEach(function(routePart) {
+      Object.keys(struct).forEach(function (routePart) {
         var block = struct[routePart];
         if (!block) {
           return;
@@ -371,12 +370,12 @@ var Client = module.exports = function(config) {
             self[section] = {};
             // add a utility function 'getFooApi()', which returns the
             // section to which functions are attached.
-            self[Util.toCamelCase("get-" + section + "-api")] = function() {
+            self[Util.toCamelCase("get-" + section + "-api")] = function () {
               return self[section];
             };
           }
 
-          self[section][funcName] = function(msg, callback) {
+          self[section][funcName] = function (msg, callback) {
             try {
               parseParams(msg, block.params);
             } catch (ex) {
@@ -397,8 +396,8 @@ var Client = module.exports = function(config) {
 
             if (!callback) {
               if (self.Promise) {
-                return new self.Promise(function(resolve,reject) {
-                  var cb = function(err, obj) {
+                return new self.Promise(function (resolve, reject) {
+                  var cb = function (err, obj) {
                     if (err) {
                       reject(err);
                     } else {
@@ -468,7 +467,7 @@ var Client = module.exports = function(config) {
      *          token: "jwt",
      *      });
    **/
-  this.authenticate = function(options) {
+  this.authenticate = function (options) {
     if (!options) {
       this.auth = false;
       return;
@@ -503,7 +502,7 @@ var Client = module.exports = function(config) {
 
     // link format:
     // '<https://api.github.com/users/aseemk/followers?page=2>; rel="next", <https://api.github.com/users/aseemk/followers?page=2>; rel="last"'
-    link.replace(/<([^>]*)>;\s*rel="([\w]*)\"/g, function(m, uri, type) {
+    link.replace(/<([^>]*)>;\s*rel="([\w]*)\"/g, function (m, uri, type) {
       links[type] = uri;
     });
     return links;
@@ -515,7 +514,7 @@ var Client = module.exports = function(config) {
    *
    *  Check if a request result contains a link to the next page
    **/
-  this.hasNextPage = function(link) {
+  this.hasNextPage = function (link) {
     return getPageLinks(link).next;
   };
 
@@ -525,7 +524,7 @@ var Client = module.exports = function(config) {
    *
    *  Check if a request result contains a link to the previous page
    **/
-  this.hasPreviousPage = function(link) {
+  this.hasPreviousPage = function (link) {
     return getPageLinks(link).prev;
   };
 
@@ -535,7 +534,7 @@ var Client = module.exports = function(config) {
    *
    *  Check if a request result contains a link to the last page
    **/
-  this.hasLastPage = function(link) {
+  this.hasLastPage = function (link) {
     return getPageLinks(link).last;
   };
 
@@ -545,7 +544,7 @@ var Client = module.exports = function(config) {
    *
    *  Check if a request result contains a link to the first page
    **/
-  this.hasFirstPage = function(link) {
+  this.hasFirstPage = function (link) {
     return getPageLinks(link).first;
   };
 
@@ -572,8 +571,8 @@ var Client = module.exports = function(config) {
 
     if (!callback) {
       if (self.Promise) {
-        return new self.Promise(function(resolve,reject) {
-          var cb = function(err, obj) {
+        return new self.Promise(function (resolve, reject) {
+          var cb = function (err, obj) {
             if (err) {
               reject(err);
             } else {
@@ -598,7 +597,7 @@ var Client = module.exports = function(config) {
    *
    *  Get the next page, based on the contents of the `Link` header
    **/
-  this.getNextPage = function(link, headers, callback) {
+  this.getNextPage = function (link, headers, callback) {
     if (typeof headers == 'function') {
       callback = headers;
       headers = null;
@@ -614,7 +613,7 @@ var Client = module.exports = function(config) {
    *
    *  Get the previous page, based on the contents of the `Link` header
    **/
-  this.getPreviousPage = function(link, headers, callback) {
+  this.getPreviousPage = function (link, headers, callback) {
     if (typeof headers == 'function') {
       callback = headers;
       headers = null;
@@ -630,7 +629,7 @@ var Client = module.exports = function(config) {
    *
    *  Get the last page, based on the contents of the `Link` header
    **/
-  this.getLastPage = function(link, headers, callback) {
+  this.getLastPage = function (link, headers, callback) {
     if (typeof headers == 'function') {
       callback = headers;
       headers = null;
@@ -646,7 +645,7 @@ var Client = module.exports = function(config) {
    *
    *  Get the first page, based on the contents of the `Link` header
    **/
-  this.getFirstPage = function(link, headers, callback) {
+  this.getFirstPage = function (link, headers, callback) {
     if (typeof headers == 'function') {
       callback = headers;
       headers = null;
@@ -674,7 +673,7 @@ var Client = module.exports = function(config) {
       return ret;
     }
 
-    Object.keys(def.params).forEach(function(paramName) {
+    Object.keys(def.params).forEach(function (paramName) {
       paramName = paramName.replace(/^[$]+/, "");
       if (!(paramName in msg)) {
         return;
@@ -695,7 +694,7 @@ var Client = module.exports = function(config) {
         } else if (def.params[paramName] && def.params[paramName].combined) {
           // Check if this is a combined (search) string.
           val = msg[paramName].split(/[\s\t\r\n]*\+[\s\t\r\n]*/)
-                              .map(function(part) {
+                              .map(function (part) {
                                 return encodeURIComponent(part);
                               })
                               .join("+");
@@ -738,38 +737,45 @@ var Client = module.exports = function(config) {
    *
    *  Send an HTTP request to the server and pass the result to a callback.
    **/
-  this.httpSend = function(msg, block, callback) {
+  this.httpSend = function (msg, block, callback) {
     var self = this;
     var method = block.method.toLowerCase();
     var hasFileBody = block.hasFileBody;
     var hasBody = !hasFileBody && (typeof(msg.body) !== "undefined" || "head|get|delete".indexOf(method) === -1);
     var format = getRequestFormat.call(this, hasBody, block);
+    var protocol = this.config.protocol || this.constants.protocol || "http";
+    var port = this.config.port || (protocol == "https" ? 443 : 80);
+    var host = block.host || this.config.host || this.constants.host;
+
+    // Edge case for github enterprise uploadAsset:
+    // 1) In public api, host changes to uploads.github.com. In enterprise, the host remains the same.
+    // 2) In enterprise, the pathPrefix changes from: /api/v3 to /api/uploads.
+    if ((this.config.host && this.config.host !== this.constants.host)
+      && (block.host && block.host === "uploads.github.com")) {  // enterprise uploadAsset
+      host = this.config.host;
+      this.config.pathPrefix = "/api/uploads";
+    }
+
     var obj = getQueryAndUrl(msg, block, format, self.config);
     var query = obj.query;
     var url = this.config.url ? this.config.url + obj.url : obj.url;
-    var agent = undefined;
-
     var path = url;
-    var protocol = this.config.protocol || this.constants.protocol || "http";
-    var host = block.host || this.config.host || this.constants.host;
-    var port = this.config.port || (protocol == "https" ? 443 : 80);
+    if (!hasBody && query.length) {
+      path += "?" + query.join("&");
+    }
+
     var proxyUrl;
-    var ca = this.config.ca;
+    var agent = undefined;
     if (this.config.proxy !== undefined) {
       proxyUrl = this.config.proxy;
     } else {
       proxyUrl = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
     }
-    // if (proxyUrl && isNode) {
-    //     try {
-    //       var HttpsProxyAgent = require('https-proxy-agent');
-    //       if (HttpsProxyAgent) agent = new HttpsProxyAgent(proxyUrl);
-    //     } catch (e) {
-    //     }
+    // if (proxyUrl) {
+    //   agent = new HttpsProxyAgent(proxyUrl);
     // }
-    if (!hasBody && query.length) {
-      path += "?" + query.join("&");
-    }
+
+    var ca = this.config.ca;
 
     var headers = {
       "host": host,
@@ -785,8 +791,8 @@ var Client = module.exports = function(config) {
       headers["content-type"] = format == "json"
         ? "application/json; charset=utf-8"
         : format == "raw"
-        ? "text/plain; charset=utf-8"
-        : "application/x-www-form-urlencoded; charset=utf-8";
+          ? "text/plain; charset=utf-8"
+          : "application/x-www-form-urlencoded; charset=utf-8";
     }
     if (this.auth) {
       var basic;
@@ -812,6 +818,13 @@ var Client = module.exports = function(config) {
           basic = new Buffer(this.auth.username + ":" + this.auth.password, "ascii").toString("base64");
           headers["Authorization"] = "Basic " + basic;
           break;
+        case "netrc":
+          var auth = netrc()[host];
+          if (!auth) {
+            throw new Error("~/.netrc authentication type chosen but no credentials found for '" + host + "'");
+          }
+          basic = new Buffer(auth.login + ":" + auth.password, "ascii").toString("base64");
+          headers["Authorization"] = "Basic " + basic;
         default:
           break;
       }
@@ -826,7 +839,7 @@ var Client = module.exports = function(config) {
     }
 
     function addCustomHeaders(customHeaders) {
-      Object.keys(customHeaders).forEach(function(header) {
+      Object.keys(customHeaders).forEach(function (header) {
         var headerLC = header.toLowerCase();
         if (self.requestHeaders.indexOf(headerLC) == -1) {
           return;
@@ -834,6 +847,7 @@ var Client = module.exports = function(config) {
         headers[headerLC] = customHeaders[header];
       });
     }
+
     addCustomHeaders(Util.extend(msg.headers || {}, this.config.headers));
 
     if (!headers["user-agent"]) {
@@ -942,22 +956,21 @@ var Client = module.exports = function(config) {
         var httpStr = options.port === 443 ? 'https' : 'http';
         var uri = httpStr + '://' + options.host + options.path;
 
-        fetch(uri, options).then(function(res) {
+        fetch(uri, options).then(function (res) {
           res.statusCode = res.statusCode || res.status;
-          
+
           if (self.debug) {
             console.log("STATUS: " + res.statusCode);
             console.log("HEADERS: " + JSON.stringify(res.headers));
           }
 
-          
-          res.text().then(function(text) {
+          res.text().then(function (text) {
             var data;
 
             if (text) {
               try {
                 data = JSON.parse(text);
-              } catch(jsonParseError) {}
+              } catch (jsonParseError) {}
             }
 
             res.data = data;
@@ -971,7 +984,7 @@ var Client = module.exports = function(config) {
               callCallback(null, res);
             }
           });
-        }).catch((e) => {
+        }).catch(function (e) {
           callCallback(e);
         });
       }
@@ -997,7 +1010,7 @@ var Client = module.exports = function(config) {
     }
   };
 
-  this.sendError = function(err, block, msg, callback) {
+  this.sendError = function (err, block, msg, callback) {
     if (this.debug) {
       Util.log(err, block, msg, "error");
     }
@@ -1009,9 +1022,9 @@ var Client = module.exports = function(config) {
     }
   };
 
-  this.handler = function(msg, block, callback) {
+  this.handler = function (msg, block, callback) {
     var self = this;
-    this.httpSend(msg, block, function(err, res) {
+    this.httpSend(msg, block, function (err, res) {
       if (err) {
         return self.sendError(err, msg, null, callback);
       }
@@ -1022,7 +1035,7 @@ var Client = module.exports = function(config) {
         if (contentType && contentType.indexOf("application/json") !== -1) {
           ret = res.data && JSON.parse(res.data);
         } else {
-          ret = {data: res.data};
+          ret = { data: res.data };
         }
       } catch (ex) {
         if (callback) {
@@ -1039,10 +1052,9 @@ var Client = module.exports = function(config) {
       if (typeof Header !== 'undefined' && headers instanceof Header) {
         // transform Header into a normal json object
         headers.forEach(function (value, key) { headers[key] = value; });
-        headers = headers;
       } else if (headers.map) {
         var keys = Object.keys(headers.map);
-        for(var i = 0, l = keys.length; i < l; i++) {
+        for (var i = 0, l = keys.length; i < l; i++) {
           var key = keys[i];
           if (Array.isArray(headers.map[key])) {
             headers[key] = headers.map[key] = headers.map[key][0];
@@ -1051,7 +1063,7 @@ var Client = module.exports = function(config) {
       }
 
       ret.meta = {};
-      self.responseHeaders.forEach(function(header) {
+      self.responseHeaders.forEach(function (header) {
         if (headers[header]) {
           ret.meta[header] = headers[header];
         }
@@ -1520,6 +1532,10 @@ module.exports={
             }
         },
         "acceptTree": {
+            "application/vnd.github.cloak-preview+json": [
+                "/search/commits"
+            ],
+            
             "application/vnd.github.ant-man-preview+json": [
                 "/repos/:owner/:repo/deployments",
                 "/repos/:owner/:repo/deployments/:id/statuses"
@@ -1558,6 +1574,17 @@ module.exports={
                 "/orgs/:org/migrations/:id",
                 "/orgs/:org/migrations/:id/archive",
                 "/orgs/:org/migrations/:id/repos/:repo_name/lock"
+            ],
+            
+            "application/vnd.github.korra-preview+json": [
+                "/orgs/:org",
+                "/orgs/:org/invitations",
+                "/orgs/:org/outside_collaborators",
+                "/orgs/:org/outside_collaborator/:username",
+                "/orgs/:org/teams",
+                "/repos/:owner/:repo/collaborators",
+                "/repos/:owner/:repo/collaborators/:username/permission",
+                "/teams/:id/invitations"
             ],
             
             "application/vnd.github.mister-fantastic-preview+json": [
@@ -1608,18 +1635,23 @@ module.exports={
                 "/repos/:owner/:repo/issues/:number/reactions",
                 "/repos/:owner/:repo/issues/comments/:id/reactions",
                 "/repos/:owner/:repo/pulls/comments/:id/reactions",
-                "/reactions/:id"
-            ],
-            
-            "application/vnd.github.spiderman-preview": [
-                "/repos/:owner/:repo/traffic/popular/referrers",
-                "/repos/:owner/:repo/traffic/popular/paths",
-                "/repos/:owner/:repo/traffic/views",
-                "/repos/:owner/:repo/traffic/clones"
+                "/reactions/:id",
+                "/repos/:owner/:repo/pulls/:number/comments",
+                "/repos/:owner/:repo/pulls/comments",
+                "/repos/:owner/:repo/pulls/comments/:id"
             ],
             
             "application/vnd.github.mockingbird-preview": [
                 "/repos/:owner/:repo/issues/:issue_number/timeline"
+            ],
+            
+            "application/vnd.github.black-cat-preview+json": [
+                "/repos/:owner/:repo/pulls/:number/reviews",
+                "/repos/:owner/:repo/pulls/:number/reviews/:id",
+                "/repos/:owner/:repo/pulls/:number/reviews/:id/comments",
+                "/repos/:owner/:repo/pulls/:number/reviews/:id/events",
+                "/repos/:owner/:repo/pulls/:number/reviews/:id/dismissals",
+                "/repos/:owner/:repo/pulls/:number/requested_reviewers"
             ]
         }
     },
@@ -4129,6 +4161,23 @@ module.exports={
                     "validation": "",
                     "invalidmsg": "",
                     "description": "The description of the company."
+                },
+                "default_repository_permission": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "^(read|write|admin|none)$",
+                    "invalidmsg": "read, write, admin, none, default: read",
+                    "description": "Default permission level members have for organization repositories.",
+                    "enum": ["read", "write", "admin", "none"],
+                    "default": "read"
+                },
+                "members_can_create_repositories": {
+                    "type": "Boolean",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "Toggles ability of non-admin organization members to create repositories.",
+                    "default": true
                 }
             },
             "description": "Edit an organization"
@@ -4259,6 +4308,46 @@ module.exports={
             },
             "description": "Remove organization membership"
         },
+        
+        "get-pending-org-invites": {
+            "url": "/orgs/:org/invitations",
+            "method": "GET",
+            "params": {
+                "$org": null
+            },
+            "description": "List pending organization invites."
+        },
+        
+        "get-outside-collaborators": {
+            "url": "/orgs/:org/outside_collaborators",
+            "method": "GET",
+            "params": {
+                "$org": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "List all users who are outside collaborators of an organization."
+        },
+        
+        "remove-outside-collaborator": {
+            "url": "/orgs/:org/outside_collaborator/:username",
+            "method": "DELETE",
+            "params": {
+                "$org": null,
+                "$username": null
+            },
+            "description": "Remove outside collaborator."
+        },
+        
+        "convert-member-to-outside-collaborator": {
+            "url": "/orgs/:org/outside_collaborator/:username",
+            "method": "PUT",
+            "params": {
+                "$org": null,
+                "$username": null
+            },
+            "description": "Convert member to outside collaborator."
+        },
 
         "get-teams": {
             "url": "/orgs/:org/teams",
@@ -4292,6 +4381,13 @@ module.exports={
                     "validation": "",
                     "invalidmsg": "",
                     "description": "The description of the team."
+                },
+                "maintainers": {
+                    "type": "Array",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The logins of organization members to add as maintainers of the team."
                 },
                 "repo_names": {
                     "type": "Array",
@@ -4400,6 +4496,17 @@ module.exports={
                 "$per_page": null
             },
             "description": "Get team repos"
+        },
+        
+        "get-pending-team-invites": {
+            "url": "/teams/:id/invitations",
+            "method": "GET",
+            "params": {
+                "$id": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "List pending team invitations."
         },
 
         "check-team-repo": {
@@ -4708,9 +4815,9 @@ module.exports={
                 "position": {
                     "type": "String",
                     "required": true,
-                    "validation": "^(first|last|after:\\d)$",
+                    "validation": "^(top|bottom|after:\\d)$",
                     "invalidmsg": "",
-                    "description": "Can be one of first, last, or after:<column-id>, where <column-id> is the id value of a column in the same project."
+                    "description": "Can be one of top, bottom, or after:<column-id>, where <column-id> is the id value of a column in the same project."
                 },
                 "column_id": {
                     "type": "String",
@@ -4911,7 +5018,13 @@ module.exports={
                     "description": "The contents of the pull request."
                 },
                 "$state": null,
-                "$base": null
+                "base": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The branch (or git ref) you want your changes pulled into. This should be an existing branch on the current repository. You cannot submit a pull request to one repo that requests a merge to a base of another repo."
+                }
             },
             "description": "Update a pull request"
         },
@@ -4995,7 +5108,143 @@ module.exports={
             },
             "description": "Merge a pull request (Merge Button)"
         },
-
+        
+        "get-reviews": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "List reviews on a pull request. (In preview period. See README.)"
+        },
+        
+        "get-review": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews/:id",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$id": null
+            },
+            "description": "Get a single pull request review. (In preview period. See README.)"
+        },
+        
+        "get-review-comments": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews/:id/comments",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$id": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "Get comments for a pull request review. (In preview period. See README.)"
+        },
+        
+        "create-review": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews",
+            "method": "POST",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "body": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The body text of the pull request review."
+                },
+                "event": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "^(APPROVE|REQUEST_CHANGES|COMMENT|PENDING)$",
+                    "invalidmsg": "Possible values are: `APPROVE`, `REQUEST_CHANGES`, `COMMENT`, `PENDING`. Default: `PENDING`",
+                    "description": "The event to perform on the review upon submission, can be one of APPROVE, REQUEST_CHANGES, or COMMENT. If left blank, the review will be in the PENDING state.",
+                    "enum": ["APPROVE", "REQUEST_CHANGES", "COMMENT", "PENDING"],
+                    "default": "PENDING"
+                },
+                "comments": {
+                    "type": "Array",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "An array of comments part of the review."
+                },
+                "path": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The path to the file being commented on."
+                },
+                "position": {
+                    "type": "Number",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The position in the file to be commented on."
+                }
+            },
+            "description": "Create a pull request review. (In preview period. See README.)"
+        },
+        
+        "submit-review": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews/:id/events",
+            "method": "POST",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$id": null,
+                "body": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The body text of the pull request review."
+                },
+                "event": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "^(APPROVE|REQUEST_CHANGES|COMMENT|PENDING)$",
+                    "invalidmsg": "Possible values are: `APPROVE`, `REQUEST_CHANGES`, `COMMENT`, `PENDING`. Default: `PENDING`",
+                    "description": "The event to perform on the review upon submission, can be one of APPROVE, REQUEST_CHANGES, or COMMENT. If left blank, the review will be in the PENDING state.",
+                    "enum": ["APPROVE", "REQUEST_CHANGES", "COMMENT", "PENDING"],
+                    "default": "PENDING"
+                }
+            },
+            "description": "Submit a pull request review. (In preview period. See README.)"
+        },
+        
+        "dismiss-review": {
+            "url": "/repos/:owner/:repo/pulls/:number/reviews/:id/dismissals",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$id": null,
+                "message": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "The message for the pull request review dismissal."
+                },
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "Dismiss a pull request review. (In preview period. See README.)"
+        },
+        
         "get-comments": {
             "url": "/repos/:owner/:repo/pulls/:number/comments",
             "method": "GET",
@@ -5098,6 +5347,55 @@ module.exports={
                 "$id": null
             },
             "description": "Delete a comment"
+        },
+        
+        "get-review-requests": {
+            "url": "/repos/:owner/:repo/pulls/:number/requested_reviewers",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "List review requests. (In preview period. See README.)"
+        },
+        
+        "create-review-request": {
+            "url": "/repos/:owner/:repo/pulls/:number/requested_reviewers",
+            "method": "POST",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "reviewers": {
+                    "type": "Array",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "An array of user logins that will be requested."
+                }
+            },
+            "description": "Create a review request. (In preview period. See README.)"
+        },
+        
+        "delete-review-request": {
+            "url": "/repos/:owner/:repo/pulls/:number/requested_reviewers",
+            "method": "DELETE",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$number": null,
+                "reviewers": {
+                    "type": "Array",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "An array of user logins that will be requested."
+                }
+            },
+            "description": "Delete a review request. (In preview period. See README.)"
         }
     },
 
@@ -5661,6 +5959,14 @@ module.exports={
                     "invalidmsg": "",
                     "description": "JSON object that contains the following keys: `include_admins` - Enforce required status checks for repository administrators, `strict` - Require branches to be up to date before merging, `contexts` - The list of status checks to require in order to merge into this branch. This object can have the value of `null` for disabled."
                 },
+                "required_pull_request_reviews": {
+                    "type": "Json",
+                    "required": true,
+                    "allow-null": true,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "JSON object that contains the following keys: `include_admins` - Enforce required status checks for repository administrators."
+                },
                 "restrictions": {
                     "type": "Json",
                     "required": true,
@@ -5816,6 +6122,48 @@ module.exports={
                 }
             },
             "description": "Remove required status checks contexts of protected branch. (In preview period. See README.)"
+        },
+
+        "get-protected-branch-pull-request-review-enforcement": {
+            "url": "/repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$branch": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "Get pull request review enforcement of protected branch. (In preview period. See README.)"
+        },
+
+        "update-protected-branch-pull-request-review-enforcement": {
+            "url": "/repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews",
+            "method": "PATCH",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$branch": null,
+                "include_admins": {
+                    "type": "Boolean",
+                    "required": false,
+                    "validation": "",
+                    "invalidmsg": "",
+                    "description": "Enforce required status checks for repository administrators."
+                }
+            },
+            "description": "Update pull request review enforcement of protected branch. (In preview period. See README.)"
+        },
+        
+        "remove-protected-branch-pull-request-review-enforcement": {
+            "url": "/repos/:owner/:repo/branches/:branch/protection/required_pull_request_reviews",
+            "method": "DELETE",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$branch": null
+            },
+            "description": "Remove pull request review enforcement of protected branch. (In preview period. See README.)"
         },
 
         "get-protected-branch-restrictions": {
@@ -5988,6 +6336,15 @@ module.exports={
             "params": {
                 "$owner": null,
                 "$repo": null,
+                "affiliation": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "^(outside|all)$",
+                    "invalidmsg": "outside, all, default: all",
+                    "description": "Filter collaborators returned by their affiliation.",
+                    "enum": ["outside", "all"],
+                    "default": "all"
+                },
                 "$page": null,
                 "$per_page": null
             },
@@ -6004,7 +6361,18 @@ module.exports={
             },
             "description": "Check if user is a collaborator."
         },
-
+        
+        "review-user-permission-level": {
+            "url": "/repos/:owner/:repo/collaborators/:username/permission",
+            "method": "GET",
+            "params": {
+                "$owner": null,
+                "$repo": null,
+                "$username": null
+            },
+            "description": "Review a user's permission level."
+        },
+        
         "add-collaborator": {
             "url": "/repos/:owner/:repo/collaborators/:username",
             "method": "PUT",
@@ -7009,7 +7377,7 @@ module.exports={
             "description": "Delete a release"
         },
 
-        "list-assets": {
+        "get-assets": {
             "url": "/repos/:owner/:repo/releases/:id/assets",
             "method": "GET",
             "params": {
@@ -7233,7 +7601,7 @@ module.exports={
                 "$page": null,
                 "$per_page": null
             },
-            "description": "Get the top 10 referrers over the last 14 days. (In preview period. See README.)"
+            "description": "Get the top 10 referrers over the last 14 days."
         },
 
         "get-paths": {
@@ -7245,7 +7613,7 @@ module.exports={
                 "$page": null,
                 "$per_page": null
             },
-            "description": "Get the top 10 popular contents over the last 14 days. (In preview period. See README.)"
+            "description": "Get the top 10 popular contents over the last 14 days."
         },
 
         "get-views": {
@@ -7257,7 +7625,7 @@ module.exports={
                 "$page": null,
                 "$per_page": null
             },
-            "description": "Get the total number of views and breakdown per day or week for the last 14 days. (In preview period. See README.)"
+            "description": "Get the total number of views and breakdown per day or week for the last 14 days."
         },
 
         "get-clones": {
@@ -7269,7 +7637,7 @@ module.exports={
                 "$page": null,
                 "$per_page": null
             },
-            "description": "Get the total number of clones and breakdown per day or week for the last 14 days. (In preview period. See README.)"
+            "description": "Get the total number of clones and breakdown per day or week for the last 14 days."
         },
 
         "get-hooks": {
@@ -7449,6 +7817,26 @@ module.exports={
                 "$per_page": null
             },
             "description": "Search code."
+        },
+
+        "commits": {
+            "url": "/search/commits",
+            "method": "GET",
+            "params": {
+                "$q": null,
+                "sort": {
+                    "type": "String",
+                    "required": false,
+                    "validation": "^(author-date|committer-date)$",
+                    "invalidmsg": "author-date or committer-date",
+                    "description": "The sort field. Can be author-date or committer-date. Default: best match.",
+                    "enum": ["author-date", "committer-date"]
+                },
+                "$order": null,
+                "$page": null,
+                "$per_page": null
+            },
+            "description": "Search commits. (In preview period. See README.)"
         },
 
         "issues": {
