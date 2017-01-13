@@ -956,6 +956,8 @@ var Client = module.exports = function (config) {
         var httpStr = options.port === 443 ? 'https' : 'http';
         var uri = httpStr + '://' + options.host + options.path;
 
+        if (hasBody) options.body = query;
+
         fetch(uri, options).then(function (res) {
           res.statusCode = res.statusCode || res.status;
 
