@@ -8,7 +8,7 @@ declare namespace Github {
     | "If-Modified-Since"
     | "If-None-Match"
     | "Cookie"
-    | "User-Agent"
+    // | "User-Agent"
     | "Accept"
     | "X-GitHub-OTP"
     ;

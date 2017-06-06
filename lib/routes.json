@@ -30,7 +30,6 @@
             "If-Modified-Since",
             "If-None-Match",
             "Cookie",
-            "User-Agent",
             "Accept",
             "X-GitHub-OTP"
         ],
